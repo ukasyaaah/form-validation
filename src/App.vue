@@ -1,6 +1,6 @@
 <script setup>
 import { email, min, required } from "@vee-validate/rules";
-import { defineRule, ErrorMessage, Field, Form } from "vee-validate";
+import { defineRule, ErrorMessage , Field, Form } from "vee-validate";
 import { reactive } from "vue";
 
 const data = reactive({
@@ -12,7 +12,13 @@ const data = reactive({
   gender: "",
 });
 
-
+// const { values, handleSubmit } = useForm<data>({
+//   validationSchema: object({
+//     email: string().required(),
+//     password: string().required(),
+//     name: string(),
+//   }),
+// });
 defineRule('required', required);
 defineRule('email', email);
 defineRule('min', min);
@@ -31,12 +37,12 @@ function submitForm() {
     <div>
       <label for="name">Name</label>
       <Field name="name" type="text" :rules="required" id="name" v-model.lazy="data.name" />
-      <ErrorMessage as="text" name="name" />
+      <ErrorMessage class="error" as="text" name="name" />
     </div>
     <div>
       <label for="email">Email</label>
       <Field name="email" type="email" rules="email|required" v-model.lazy="data.email" />
-      <ErrorMessage as="text" name="email" />
+      <ErrorMessage class="error" as="text" name="email" />
     </div>
     <div>
       <label for="gender">Gender</label>
@@ -44,19 +50,19 @@ function submitForm() {
         <option value="Male">Male</option>
         <option value="Female">Female</option>
       </Field>
-      <ErrorMessage as="text" name="gender" />
+      <ErrorMessage class="error" as="text" name="gender" />
 
     </div>
     <div>
       <label for="subject">Subject</label>
       <Field name="subject" type="text" :rules="required" id="subject" v-model.lazy="data.subject" />
-      <ErrorMessage as="text" name="subject" />
+      <ErrorMessage class="error" as="text" name="subject" />
     </div>
 
     <div>
       <label for="message">Message</label>
-      <Field name="message" rules="required|min:20" as="textarea" id="message" rows="3" v-model.lazy="data.message" />
-      <ErrorMessage as="text" name="message" />
+      <Field name="message" rules="required" as="textarea" id="message" rows="3" v-model.lazy="data.message" />
+      <ErrorMessage class="error" as="text" name="message" />
     </div>
 
     <fieldset>
@@ -69,7 +75,7 @@ function submitForm() {
         <Field name="extras" type="checkbox" rules="required" value="Promotion" id="promotion" v-model="data.extras" />
         <label for="promotion">Promotion</label>
       </div>
-      <ErrorMessage as="text" name="extras" />
+      <ErrorMessage class="error"  as="text" name="extras" />
     </fieldset>
 
     <button>Submit Form</button>
@@ -78,6 +84,10 @@ function submitForm() {
 <style scoped>
 h1 {
   color: olive;
+}
+
+.error{
+  color: red;
 }
 
 form {
