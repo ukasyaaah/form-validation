@@ -1,81 +1,101 @@
 <script setup>
-import { email, min, required } from "@vee-validate/rules";
-import { defineRule, ErrorMessage , Field, Form } from "vee-validate";
+import * as yup from "yup";
+import { ErrorMessage, Field, Form } from "vee-validate";
 import { reactive } from "vue";
 
 const data = reactive({
   name: "",
   email: "",
+  gender: "",
   subject: "",
   message: "",
   extras: [],
-  gender: "",
 });
 
-// const { values, handleSubmit } = useForm<data>({
-//   validationSchema: object({
-//     email: string().required(),
-//     password: string().required(),
-//     name: string(),
-//   }),
-// });
-defineRule('required', required);
-defineRule('email', email);
-defineRule('min', min);
-
+const schema = yup.object({
+  name: yup.string().required(),
+  email: yup
+    .string()
+    .required("Email gaboleh kosong")
+    .email("Email mu ga valid nih"),
+  gender: yup.string().required("Wajib punya kelamin!"),
+  subject: yup.string().required("Subject gaboleh kosong"),
+  message: yup.string().required("Message gaboleh kosong"),
+  extras: yup.array().optional(),
+});
 
 function submitForm() {
   alert(JSON.stringify(data, null, 2));
 }
-
-
 </script>
 
 <template>
   <h1>Contact Person</h1>
-  <Form @submit="submitForm">
+  <Form @submit="submitForm" :validation-schema="schema">
     <div>
       <label for="name">Name</label>
-      <Field name="name" type="text" :rules="required" id="name" v-model.lazy="data.name" />
-      <ErrorMessage class="error" as="text" name="name" />
+      <Field name="name" type="text" id="name" v-model.lazy="data.name" />
+      <ErrorMessage class="error" name="name" />
     </div>
     <div>
       <label for="email">Email</label>
-      <Field name="email" type="email" rules="email|required" v-model.lazy="data.email" />
+      <Field name="email" type="email" v-model.lazy="data.email" />
       <ErrorMessage class="error" as="text" name="email" />
     </div>
     <div>
       <label for="gender">Gender</label>
-      <Field name="gender" as="select" rules="required" id="gender" v-model.lazy="data.gender">
+      <Field name="gender" as="select" id="gender" v-model.lazy="data.gender">
         <option value="Male">Male</option>
         <option value="Female">Female</option>
       </Field>
       <ErrorMessage class="error" as="text" name="gender" />
-
     </div>
     <div>
       <label for="subject">Subject</label>
-      <Field name="subject" type="text" :rules="required" id="subject" v-model.lazy="data.subject" />
+      <Field
+        name="subject"
+        type="text"
+        id="subject"
+        v-model.lazy="data.subject"
+      />
       <ErrorMessage class="error" as="text" name="subject" />
     </div>
 
     <div>
       <label for="message">Message</label>
-      <Field name="message" rules="required" as="textarea" id="message" rows="3" v-model.lazy="data.message" />
+      <Field
+        name="message"
+        as="textarea"
+        id="message"
+        rows="3"
+        v-model.lazy="data.message"
+      />
       <ErrorMessage class="error" as="text" name="message" />
     </div>
 
     <fieldset>
       <legend>Extras ?</legend>
       <div>
-        <Field name="extras" type="checkbox" rules="required" value="Newslater" id="newslater" v-model="data.extras" />
+        <Field
+          name="extras"
+          type="checkbox"
+          value="Newslater"
+          id="newslater"
+          v-model="data.extras"
+        />
         <label for="newslater">Newslater</label>
       </div>
       <div>
-        <Field name="extras" type="checkbox" rules="required" value="Promotion" id="promotion" v-model="data.extras" />
+        <Field
+          name="extras"
+          type="checkbox"
+          value="Promotion"
+          id="promotion"
+          v-model="data.extras"
+        />
         <label for="promotion">Promotion</label>
       </div>
-      <ErrorMessage class="error"  as="text" name="extras" />
+      <ErrorMessage class="error" as="text" name="extras" />
     </fieldset>
 
     <button>Submit Form</button>
@@ -86,7 +106,7 @@ h1 {
   color: olive;
 }
 
-.error{
+.error {
   color: red;
 }
 
